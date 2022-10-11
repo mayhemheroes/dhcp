@@ -5,7 +5,7 @@ project: dhcp
 target: dhcp-dhcpv6-fuzz
 
 # Base image to run the binary in.
-image: ghcr.io/lotdeef/aws-sdk-go:latest
+# image: ghcr.io/lotdeef/dhcp:latest
 
 # List of commands used to test the target
 cmds:
