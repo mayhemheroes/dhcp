@@ -1,12 +1,4 @@
-# Namespaced project name that the target belongs to
 project: dhcp
-
-# Target name (should be unique within the project)
 target: dhcp-dhcpv6-fuzz
-
-# Base image to run the binary in.
-# image: ghcr.io/lotdeef/dhcp:latest
-
-# List of commands used to test the target
 cmds:
-  - cmd: ./fuzz.libfuzzer
+  - cmd: ./dhcpv6-fuzz.libfuzzer
