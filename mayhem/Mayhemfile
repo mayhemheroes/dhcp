@@ -1,0 +1,4 @@
+project: dhcp
+target: dhcp-dhcpv6-fuzz
+cmds:
+  - cmd: ./dhcpv6-fuzz.libfuzzer
