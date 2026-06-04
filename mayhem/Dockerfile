@@ -1,13 +1,17 @@
-FROM fuzzers/go-fuzz:1.2.0 as builder
+FROM golang:1.23 AS builder
 
-ARG project='dhcp'
-ARG fuzzTargetPath='dhcpv6'
-ARG fuzzTarget='dhcpv6-fuzz'
+ENV GOTOOLCHAIN=auto
 
-ADD . ${project}
-WORKDIR ${project}
-RUN GO_ENABLED=0 go-fuzz-build -libfuzzer -o /${fuzzTarget}.a ./${fuzzTargetPath}
-RUN clang -fsanitize=fuzzer /${fuzzTarget}.a -o /${fuzzTarget}.libfuzzer
+WORKDIR /go/dhcp
+ADD . .
 
-FROM ubuntu:20.04
+RUN apt-get update && apt-get install -y clang && \
+    CGO_ENABLED=1 CC=clang go test -c \
+        -fuzz=FuzzDHCPv6 \
+        -o /dhcpv6-fuzz.libfuzzer \
+        -gcflags=all=-d=libfuzzer \
+        -ldflags=-extldflags=-fsanitize=fuzzer \
+        github.com/insomniacslk/dhcp/dhcpv6
+
+FROM ubuntu:22.04
 COPY --from=builder /dhcpv6-fuzz.libfuzzer /
